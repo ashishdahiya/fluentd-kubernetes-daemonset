@@ -43,6 +43,29 @@
    num_threads 8
 <% end %>
 </match>
+<%  when "kinesis"%>
+<% kinesis_type =  "#{ENV['FLUENT_KINESIS_TYPE'] || 'kinesis_streams'}" %>
+<match **>
+<% if kinesis_type == 'kinesis_streams' %>
+  @type kinesis_streams
+  region "#{ENV['KINESIS_AWS_REGION'] || 'us-east-1'}"
+  stream_name "#{ENV['KINESIS_STREAM_NAME']"
+  partition_key "#{ENV['KINESIS_PARTITION_KEY'] || 'key'}"  # Otherwise, use random partition key
+<% elsif kinesis_type == 'kinesis_firehose' %>
+  @type kinesis_firehose
+  region "#{ENV['KINESIS_AWS_REGION'] || 'us-east-1'}"
+  delivery_stream_name "#{ENV['KINESIS_STREAM_NAME']"
+<% elsif kinesis_type == 'kinesis_streams_aggregated' %>
+  @type kinesis_streams_aggregated
+  region "#{ENV['KINESIS_AWS_REGION'] || 'us-east-1'}"
+  stream_name "#{ENV['KINESIS_STREAM_NAME']"
+<% end %>
+  flush_interval 1
+  chunk_limit_size 1m
+  flush_thread_interval 0.1
+  flush_thread_burst_interval 0.01
+  flush_thread_count 15
+</match>
 <%  when "logentries"%>
 <match **>
    @type logentries

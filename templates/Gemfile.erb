@@ -18,6 +18,8 @@ gem "fluent-plugin-rewrite-tag-filter"
 <% end %>
 <% case target when "elasticsearch" %>
 gem "fluent-plugin-elasticsearch"
+<% when "kinesis" %>
+gem "fluent-plugin-kinesis"
 <% when "logentries" %>
 #gem "fluent-plugin-logentries"
 <% when "loggly"%>
